@@ -1,0 +1,1 @@
+export CQLVERSION=`docker run -it --network cassandra --rm cassandra cqlsh -e "show version" cassandra | awk '{ print $9 }' | head -1`
