@@ -1,5 +1,32 @@
 #!/bin/sh
 
-CQLVERSION=`docker run -it --network cassandra --rm cassandra cqlsh -e "show version" cassandra | awk '{ print $9 }' | head -1`
+source ./env.sh
 
-docker run --rm --network cassandra -v "$(pwd)/scripts:/scripts" -e CQLSH_HOST=cassandra -e CQLSH_PORT=9042 -e CQLVERSION=$CQLVERSION nuvo/docker-cqlsh
+SCRIPTS_SRC="$(pwd)/scripts"
+
+if [[ $1 == "bootstrap" ]]; then
+  USER=${USER:-cassandra}
+  PASSWORD=${PASSWORD:-cassandra}
+  SCRIPTS_SRC="$(pwd)/bootstrap_scripts"
+fi
+
+pushd docker/cql_runner
+docker build \
+  --build-arg CASSANDRA_VERSION="$CASSANDRA_VERSION" \
+  --build-arg CQLVERSION="$CQLVERSION" \
+  -t cql-runner \
+  .
+popd
+
+docker run \
+  --rm \
+  --network cassandra \
+  -v "${SCRIPTS_SRC}:/scripts" \
+  -e USER="$USER" \
+  -e PASSWORD="$PASSWORD" \
+  -e CQLSH_HOST="$CASSANDRA_HOST" \
+  -e CQLSH_PORT="$CASSANDRA_PORT" \
+  -e CQLVERSION="$CQLVERSION" \
+  -e JMX_USER="$JMX_USER" \
+  -e JMX_PASSWORD="$JMX_PASSWORD" \
+  cql-runner
