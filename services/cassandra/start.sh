@@ -12,6 +12,7 @@ docker run \
   --name cassandra \
   --hostname "$CASSANDRA_HOST" \
   --network cassandra \
+  -p "${CASSANDRA_PORT}:${CASSANDRA_PORT}" \
   cassandra:"$CASSANDRA_VERSION"
 
 container_id=$(docker ps -aqf "name=cassandra")
