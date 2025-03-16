@@ -25,14 +25,14 @@ func Consume() {
 	// Create a new consumer
 	consumer, err := kafka.NewConsumer(config)
 	if err != nil {
-		log.Fatalf("Failed to create consumer: %s", err)
+		log.Fatalf("Failed to create consumer: %v", err)
 	}
 	defer consumer.Close()
 
 	// Subscribe to the topic
 	err = consumer.SubscribeTopics([]string{env.Topic}, nil)
 	if err != nil {
-		log.Fatalf("Failed to subscribe to topic: %s", err)
+		log.Fatalf("Failed to subscribe to topic: %v", err)
 	}
 
 	fmt.Println("Kafka Consumer started... Press Ctrl+C to exit.")

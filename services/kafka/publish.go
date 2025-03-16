@@ -13,7 +13,7 @@ func Publish(m string) {
 		"bootstrap.servers": env.Broker,
 	})
 	if err != nil {
-		log.Fatalf("Failed to create producer: %s\n", err)
+		log.Fatalf("Failed to create producer: %v\n", err)
 	}
 	defer producer.Close()
 
