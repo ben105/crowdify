@@ -21,7 +21,9 @@ func main() {
 						Name:  "add",
 						Usage: "add a new track",
 						Action: func(ctx context.Context, cmd *cli.Command) error {
-							fmt.Println("new track:", cmd.Args().First())
+							trackName := cmd.Args().First()
+							fmt.Println("new track:", trackName)
+							addTrack(trackName)
 							return nil
 						},
 					},
