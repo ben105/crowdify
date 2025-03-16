@@ -1,4 +1,4 @@
-module src/kafka-test
+module github.com/ben105/crowdify/services/kafka
 
 go 1.21.4
 

@@ -1,15 +1,16 @@
-package main
+package kafka
 
 import (
 	"fmt"
 	"log"
 
+	"github.com/ben105/crowdify/packages/env"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
-func publish(m string) {
+func Publish(m string) {
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{
-		"bootstrap.servers": broker,
+		"bootstrap.servers": env.Broker,
 	})
 	if err != nil {
 		log.Fatalf("Failed to create producer: %s\n", err)
@@ -19,7 +20,7 @@ func publish(m string) {
 	deliveryChan := make(chan kafka.Event)
 
 	message := &kafka.Message{
-		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
+		TopicPartition: kafka.TopicPartition{Topic: &env.Topic, Partition: kafka.PartitionAny},
 		Value:          []byte(m),
 	}
 

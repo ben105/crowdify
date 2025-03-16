@@ -1,4 +1,4 @@
-package main
+package kafka
 
 import (
 	"fmt"
@@ -7,15 +7,18 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/ben105/crowdify/packages/env"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
-func consume() {
+func Consume() {
+	fmt.Printf("Using broker %s and topic %s\n", env.Broker, env.Topic)
+
 	// Create a new Kafka consumer configuration
 	config := &kafka.ConfigMap{
-		"bootstrap.servers": broker,
-		"group.id":          groupId,
-		"group.instance.id": groupInstanceId,
+		"bootstrap.servers": env.Broker,
+		"group.id":          env.GroupId,
+		"group.instance.id": env.GroupInstanceId,
 		"auto.offset.reset": "earliest",
 	}
 
@@ -27,7 +30,7 @@ func consume() {
 	defer consumer.Close()
 
 	// Subscribe to the topic
-	err = consumer.SubscribeTopics([]string{topic}, nil)
+	err = consumer.SubscribeTopics([]string{env.Topic}, nil)
 	if err != nil {
 		log.Fatalf("Failed to subscribe to topic: %s", err)
 	}
