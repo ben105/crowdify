@@ -1,6 +1,6 @@
 module github.com/ben105/crowdify/packages/db
 
-go 1.21.4
+go 1.22
 
 require (
 	github.com/ben105/crowdify/packages/env v0.0.0-20250316221647-feca356ec1cb
