@@ -7,16 +7,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var (
-	Topic,
-	Broker,
-	GroupId,
-	GroupInstanceId,
-	CqlVersion,
-	CassandraHost,
-	CassandraPort string
-)
-
 func GetEnv(key, fallback string) string {
 	value := os.Getenv(key)
 	if value == "" {
@@ -30,15 +20,32 @@ func init() {
 	if err != nil {
 		fmt.Println("Could not find an .env file. Only defaults will be used.")
 	}
+}
 
-	// Kafka related environment variables
-	Topic = GetEnv("TOPIC", "local-topic")
-	Broker = GetEnv("BROKER", "localhost:9092")
-	GroupId = GetEnv("GROUP_ID", "local-consumer-group")
-	GroupInstanceId = GetEnv("GROUP_INSTANCE_ID", "local-consumer-group-instance")
+func GetTopic() string {
+	return GetEnv("TOPIC", "local-topic")
+}
 
-	// Cassandra related environment variables
-	CqlVersion = GetEnv("CQLVERSION", "3.4.7")
-	CassandraHost = GetEnv("CASSANDRA_HOST", "cassandra")
-	CassandraPort = GetEnv("CASSANDRA_PORT", "9042")
+func GetBroker() string {
+	return GetEnv("BROKER", "localhost:9092")
+}
+
+func GetGroupId() string {
+	return GetEnv("GROUP_ID", "local-consumer-group")
+}
+
+func GetGroupInstanceId() string {
+	return GetEnv("GROUP_INSTANCE_ID", "local-consumer-group-instance")
+}
+
+func GetCqlVersion() string {
+	return GetEnv("CQLVERSION", "3.4.7")
+}
+
+func GetCassandraHost() string {
+	return GetEnv("CASSANDRA_HOST", "cassandra")
+}
+
+func GetCassandraPort() string {
+	return GetEnv("CASSANDRA_PORT", "9042")
 }
