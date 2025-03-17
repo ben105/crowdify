@@ -4,7 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
+	"path/filepath"
+	"runtime"
 
 	tc "github.com/testcontainers/testcontainers-go/modules/compose"
 )
@@ -12,12 +13,15 @@ import (
 var ctx = context.Background()
 var compose tc.ComposeStack
 
-func init() {
+func Load() {
 	fmt.Println("Starting environment...")
 	identifier := tc.StackIdentifier("integration_tests")
 
+	_, filename, _, _ := runtime.Caller(0)
+	moduleDir := filepath.Dir(filename)
+
 	var err error
-	compose, err = tc.NewDockerComposeWith(tc.WithStackFiles("../../emulator/compose.yaml"), identifier)
+	compose, err = tc.NewDockerComposeWith(tc.WithStackFiles(filepath.Join(moduleDir, "../../emulator/compose.yaml")), identifier)
 	if err != nil {
 		log.Fatalf("Failed to start environment: %v\n", err)
 	}
@@ -25,10 +29,6 @@ func init() {
 
 func Emulate() {
 	err := compose.Up(ctx, tc.Wait(true))
-
-	// Wait for our migrations to run, otherwise we try to connect to a keyspace that doesn't exist.
-	time.Sleep(30 * time.Second)
-
 	if err != nil {
 		log.Fatalf("Failed to start environment: %v\n", err)
 	}

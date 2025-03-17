@@ -3,6 +3,8 @@ package env
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"runtime"
 
 	"github.com/joho/godotenv"
 )
@@ -16,7 +18,9 @@ func GetEnv(key, fallback string) string {
 }
 
 func init() {
-	err := godotenv.Load("../../.env")
+	_, filename, _, _ := runtime.Caller(0)
+	moduleDir := filepath.Dir(filename)
+	err := godotenv.Load(filepath.Join(moduleDir, "../../.env"))
 	if err != nil {
 		fmt.Println("Could not find an .env file. Only defaults will be used.")
 	}
