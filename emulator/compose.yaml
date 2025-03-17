@@ -12,8 +12,8 @@ services:
     tty: true
     stdin_open: true
     environment:
-      - USERNAME=cassandra
-      - PASSWORD=cassandra
+      - CASSANDRA_USERNAME=cassandra
+      - CASSANDRA_PASSWORD=cassandra
       - CQLVERSION=3.4.7
 
 networks:

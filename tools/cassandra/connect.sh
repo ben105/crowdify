@@ -9,6 +9,6 @@ docker run \
   -it \
   --network cassandra \
   nuvo/docker-cqlsh \
-  cqlsh -u "${USERNAME:-cassandra}" -p "${PASSWORD:-cassandra}" --cqlversion="${CQLVERSION:-3.4.7}" \
+  cqlsh -u "${CASSANDRA_USERNAME:-cassandra}" -p "${CASSANDRA_PASSWORD:-cassandra}" --cqlversion="${CQLVERSION:-3.4.7}" \
     "${CASSANDRA_HOST:-cassandra}" \
     "${CASSANDRA_PORT:-9042}"
