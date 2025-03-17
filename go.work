@@ -1,11 +1,11 @@
-go 1.22
-
-toolchain go1.23.7
+go 1.23.7
 
 use (
 	./packages/db
+	./packages/emulator
 	./packages/env
-	./packages/integration_tests
+	./services/crowdify
+	./services/crowdify/integration
 	./services/kafka
 	./tools/cli
 	./tools/kafka

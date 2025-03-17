@@ -17,9 +17,9 @@ RUN chmod +x /usr/local/bin/healthcheck.sh
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-USER nobody
-
-HEALTHCHECK --interval=10s --timeout=10s --start-period=30s --retries=10 \
+HEALTHCHECK --interval=10s --timeout=10s --start-period=70s --retries=10 \
   CMD /usr/local/bin/healthcheck.sh
+
+USER nobody
 
 ENTRYPOINT ["/entrypoint.sh"]
