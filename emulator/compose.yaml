@@ -1,0 +1,21 @@
+services:
+  cassandra:
+    build:
+      context: cassandra
+      dockerfile: Dockerfile
+    ports:
+      - "9042:9042"
+    container_name: cassandra
+    hostname: cassandra
+    networks:
+      - cassandra
+    tty: true
+    stdin_open: true
+    environment:
+      - USERNAME=cassandra
+      - PASSWORD=cassandra
+      - CQLVERSION=3.4.7
+
+networks:
+  cassandra:
+    name: cassandra

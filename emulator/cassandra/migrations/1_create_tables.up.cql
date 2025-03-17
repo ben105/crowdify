@@ -1,7 +1,5 @@
-USE crowdify;
-
 -- Create unprocessed_tracks table
-CREATE TABLE unprocessed_tracks (
+CREATE TABLE crowdify.unprocessed_tracks (
   id text PRIMARY KEY,
   name text,
   type text,
@@ -24,4 +22,4 @@ CREATE TABLE unprocessed_tracks (
 );
 
 -- Create a secondary index on album_id for querying
-CREATE INDEX ON tracks (album_id);
+CREATE INDEX ON crowdify.unprocessed_tracks (album_id);
