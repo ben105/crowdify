@@ -3,7 +3,7 @@ module github.com/ben105/crowdify/packages/db
 go 1.22
 
 require (
-	github.com/ben105/crowdify/packages/env v0.0.0-20250316221647-feca356ec1cb
+	github.com/ben105/crowdify/packages/env v0.0.0-20250317051103-3e848d30f720
 	github.com/gocql/gocql v1.7.0
 )
 

@@ -2,18 +2,17 @@ package db
 
 import (
 	"log"
-	"os"
 
 	"github.com/ben105/crowdify/packages/env"
 	"github.com/gocql/gocql"
 )
 
 func Connect() *gocql.Session {
-	cluster := gocql.NewCluster(env.CassandraHost)
+	cluster := gocql.NewCluster(env.GetCassandraHost())
 	cluster.Keyspace = "crowdify"
 	cluster.Authenticator = gocql.PasswordAuthenticator{
-		Username: os.Getenv("USER"),
-		Password: os.Getenv("PASSWORD"),
+		Username: env.GetCassandraUsername(),
+		Password: env.GetCassandraPassword(),
 	}
 
 	session, err := cluster.CreateSession()

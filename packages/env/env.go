@@ -49,3 +49,11 @@ func GetCassandraHost() string {
 func GetCassandraPort() string {
 	return GetEnv("CASSANDRA_PORT", "9042")
 }
+
+func GetCassandraUsername() string {
+	return GetEnv("CASSANDRA_USERNAME", "cassandra")
+}
+
+func GetCassandraPassword() string {
+	return GetEnv("CASSANDRA_PASSWORD", "cassandra")
+}
