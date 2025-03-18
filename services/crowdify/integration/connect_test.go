@@ -15,5 +15,4 @@ func TestConnection(t *testing.T) {
 	if err != nil {
 		t.Errorf("Wanted to be able to run query without failure but got %v", err)
 	}
-
 }

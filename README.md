@@ -12,7 +12,9 @@ CASSANDRA_PASSWORD=cassandra
 
 ## Starting Services (Emulator)
 
-To emulate services required for running Crowdify locally, run the `make em` command. Among other things, this will boot up the Cassandra database running the necessary bootstrap scripts and all schema migrations.
+To emulate services required for running Crowdify locally, run the `./emulate.sh` command. Among other things, this will boot up the Cassandra database running the necessary bootstrap scripts and all schema migrations.
+
+If you want to turn down the services, run the same command with the `down` argument, like so: `./emulate.sh down`.
 
 ## Tools
 

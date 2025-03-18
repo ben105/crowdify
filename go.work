@@ -2,7 +2,6 @@ go 1.23.7
 
 use (
 	./packages/db
-	./packages/emulator
 	./packages/env
 	./services/crowdify
 	./services/crowdify/integration
