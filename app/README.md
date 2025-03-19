@@ -23,6 +23,25 @@ It correctly bundles Solid in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
 
-## Deployment
+### `npm run lint`
 
-Learn more about deploying your application with the [documentations](https://vite.dev/guide/static-deploy.html)
+Runs ESLint to analyze the code to find problems
+
+
+### `npm run test`
+
+Run unit the unit tests
+
+## Shadcn Components
+
+This project uses `Shadcn-Solid` components. New components can be using the following command:
+
+```sh
+npx shadcn-solid@latest add *component*
+```
+
+For more information regarding adding components and usage, see the [Shadcn-Solid documentation](https://shadcn-solid.com/docs/introduction).
+
+## Tailwindcss
+
+This project uses Tailwindcss for styling and themeing. Theme colors and other variables are located in `src/index.css`. For more information on styling and editing the apps theme, see the [Tailwindcss documentation](https://tailwindcss.com/docs/installation/using-vite).
