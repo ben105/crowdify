@@ -1,9 +1,11 @@
 #!/bin/sh
 
+source ./.env
+
 pushd emulator
-if [[ "$1" -eq "down" ]]; then
+if [[ "$1" == "down" ]]; then
     docker compose down
 else
-    docker compose up --wait -t 90
+    docker compose up --build --wait -t 90
 fi
 popd
