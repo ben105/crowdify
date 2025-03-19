@@ -7,7 +7,11 @@ import (
 	"github.com/gocql/gocql"
 )
 
-func Connect() *gocql.Session {
+type DbConnection struct {
+	session *gocql.Session
+}
+
+func Connect() *DbConnection {
 	cluster := gocql.NewCluster(env.GetCassandraHost())
 	cluster.Keyspace = "crowdify"
 	cluster.Authenticator = gocql.PasswordAuthenticator{
@@ -19,5 +23,7 @@ func Connect() *gocql.Session {
 	if err != nil {
 		log.Fatalf("Failed to create a cluster session: %v\n", err)
 	}
-	return session
+	return &DbConnection{
+		session,
+	}
 }

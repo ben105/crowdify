@@ -1,6 +1,6 @@
 module github.com/ben105/crowdify/packages/db
 
-go 1.22
+go 1.23.7
 
 require (
 	github.com/ben105/crowdify/packages/env v0.0.0-20250317051103-3e848d30f720
@@ -13,3 +13,5 @@ require (
 	github.com/joho/godotenv v1.5.1 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 )
+
+replace github.com/ben105/crowdify/packages/env => ../env
