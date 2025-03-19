@@ -15,7 +15,6 @@ until cqlsh --cqlversion "$CQLVERSION" -u "$CASSANDRA_USERNAME" -p "$CASSANDRA_P
     exit 1
   fi
   echo "Waiting for Cassandra to start..."
-  echo "cqlversion: $CQLVERSION username: $CASSANDRA_USERNAME password: $CASSANDRA_PASSWORD"
   sleep 10
 done
 
