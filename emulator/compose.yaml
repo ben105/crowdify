@@ -14,6 +14,78 @@ services:
       - CASSANDRA_USERNAME=cassandra
       - CASSANDRA_PASSWORD=cassandra
       - CQLVERSION=3.4.7
+  kafka:
+    image: apache/kafka
+    ports:
+      - "9092:9092"
+    hostname: kafka
+    networks:
+      - cassandra
+    tty: true
+    stdin_open: true
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-cluster.sh cluster-id --bootstrap-server localhost:9092"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      - KAFKA_NODE_ID=1
+      - KAFKA_PROCESS_ROLES=broker,controller
+      - KAFKA_PROCESS_ROLES=broker,controller
+      - KAFKA_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - KAFKA_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CREATE_TOPICS="track:1:1:1"
+
+  track_processor:
+    build:
+      context: ..
+      dockerfile: Dockerfile.track_processor
+    hostname: track_processor
+    networks:
+      - cassandra
+    tty: true
+    stdin_open: true
+    depends_on:
+      cassandra:
+        condition: service_healthy
+        restart: true
+      kafka:
+        condition: service_healthy
+        restart: true
+    environment:
+      - BROKER=kafka:9092
+      - TOPIC=track
+      - GROUP_ID=local-track-processor
+      - GROUP_INSTANCE_ID=local-track-processor-instance
+
+  crowdify:
+    build:
+      context: ..
+      dockerfile: Dockerfile.crowdify
+    ports:
+      - "8080:8080"
+    hostname: crowdify
+    networks:
+      - cassandra
+    tty: true
+    stdin_open: true
+    depends_on:
+      cassandra:
+        condition: service_healthy
+        restart: true
+      kafka:
+        condition: service_healthy
+        restart: true
+    environment:
+      - BROKER=kafka:9092
+      - TOPIC=track
 
 networks:
   cassandra:

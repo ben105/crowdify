@@ -1,0 +1,16 @@
+FROM golang:1.23.7 AS builder
+
+WORKDIR /app
+
+COPY ./packages ./packages
+COPY ./services ./services
+RUN cd ./services/crowdify && go mod download && go mod tidy
+RUN cd ./services/crowdify && CGO_ENABLED=1 GOOS=linux GOARCH=arm64 go build -o main .
+
+FROM ubuntu
+
+WORKDIR /app
+
+COPY --from=builder /app/services/crowdify/main .
+
+CMD ["./main"]
