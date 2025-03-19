@@ -1,4 +1,4 @@
-module github.com/ben105/crowdify/services/crowdify
+module github.com/ben105/crowdify/services/track_processor
 
 go 1.23.7
 

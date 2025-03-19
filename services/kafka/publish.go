@@ -5,23 +5,24 @@ import (
 	"log"
 
 	"github.com/ben105/crowdify/packages/env"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
+	k "github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
 
-func Publish(m string) {
-	producer, err := kafka.NewProducer(&kafka.ConfigMap{
-		"bootstrap.servers": env.Broker,
+func Publish(m []byte) {
+	producer, err := k.NewProducer(&k.ConfigMap{
+		"bootstrap.servers": env.GetBroker(),
 	})
 	if err != nil {
 		log.Fatalf("Failed to create producer: %v\n", err)
 	}
 	defer producer.Close()
 
-	deliveryChan := make(chan kafka.Event)
+	deliveryChan := make(chan k.Event)
 
-	message := &kafka.Message{
-		TopicPartition: kafka.TopicPartition{Topic: &env.Topic, Partition: kafka.PartitionAny},
-		Value:          []byte(m),
+	topic := env.GetTopic()
+	message := &k.Message{
+		TopicPartition: k.TopicPartition{Topic: &topic, Partition: k.PartitionAny},
+		Value:          m,
 	}
 
 	err = producer.Produce(message, deliveryChan)
@@ -31,7 +32,7 @@ func Publish(m string) {
 	}
 
 	e := <-deliveryChan
-	msg := e.(*kafka.Message)
+	msg := e.(*k.Message)
 	if msg.TopicPartition.Error != nil {
 		log.Fatalf("Delivery failed: %v\n", msg.TopicPartition.Error)
 	} else {

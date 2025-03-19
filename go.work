@@ -6,6 +6,7 @@ use (
 	./services/crowdify
 	./services/crowdify/integration
 	./services/kafka
+	./services/track_processor
 	./tools/cli
 	./tools/kafka
 )
