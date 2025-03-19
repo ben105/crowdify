@@ -1,0 +1,78 @@
+package main
+
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
+	"log"
+	"math/rand"
+	"net/http"
+	"os"
+
+	"github.com/ben105/crowdify/packages/db"
+	"github.com/ben105/crowdify/services/kafka"
+)
+
+var conn *db.DbConnection
+
+func main() {
+	conn = db.Connect()
+
+	mux := http.NewServeMux()
+
+	// Not a real endpoint. Just for testing.
+	mux.HandleFunc("/unprocessTrack", handleUnprocessedTrack)
+
+	err := http.ListenAndServe(":8080", mux)
+	if errors.Is(err, http.ErrServerClosed) {
+		fmt.Printf("Server closed\n")
+	} else if err != nil {
+		fmt.Printf("Error starting server: %s\n", err)
+		os.Exit(1)
+	}
+}
+
+func handleUnprocessedTrack(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("got /unprocessTrack request\n")
+
+	trackName := r.URL.Query().Get("name")
+
+	// Mock Track
+	mockTrack := db.UnprocessedTrack{
+		ID:          randStringBytes(10),
+		Name:        trackName,
+		Type:        "track",
+		DurationMs:  250_000,
+		Popularity:  75,
+		Explicit:    false,
+		TrackNumber: 3,
+		DiscNumber:  1,
+	}
+
+	addUnprocessedTrack(mockTrack)
+	io.WriteString(w, "Success!\n")
+}
+
+func addUnprocessedTrack(unprocessedTrack db.UnprocessedTrack) {
+	// Add a track to the database.
+	db.InsertUnprocessedTrack(conn, &unprocessedTrack)
+
+	// Send a message to the queue to process the track.
+	trackJson, err := json.Marshal(unprocessedTrack)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	kafka.Publish(trackJson)
+}
+
+const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+func randStringBytes(n int) string {
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	return string(b)
+}
