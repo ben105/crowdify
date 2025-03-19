@@ -11,12 +11,12 @@ func addTrack(name string) {
 	session := db.Connect()
 
 	fakeTrackId := uuid.New()
-	track := &db.Track{
+	track := &db.UnprocessedTrack{
 		ID:   fakeTrackId.String(),
 		Name: name,
 	}
 
-	if err := db.InsertTrack(session, track); err != nil {
+	if err := db.InsertUnprocessedTrack(session, track); err != nil {
 		log.Fatal(err)
 	}
 }

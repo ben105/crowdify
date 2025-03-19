@@ -1,6 +1,6 @@
 module github.com/ben105/crowdify/tools/cli
 
-go 1.22
+go 1.23.7
 
 require (
 	github.com/google/uuid v1.6.0
