@@ -3,56 +3,74 @@ package kafka
 import (
 	"fmt"
 	"log"
-	"os"
-	"os/signal"
-	"syscall"
+	"time"
 
 	"github.com/ben105/crowdify/packages/env"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
+	k "github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
 
-func Consume() {
-	fmt.Printf("Using broker %s and topic %s\n", env.Broker, env.Topic)
+type Message struct {
+	KafkaMessage *k.Message
+	Error        error
+}
 
-	// Create a new Kafka consumer configuration
-	config := &kafka.ConfigMap{
-		"bootstrap.servers": env.Broker,
-		"group.id":          env.GroupId,
-		"group.instance.id": env.GroupInstanceId,
+type KafkaConsumer struct {
+	consumer *k.Consumer
+	Messages chan Message
+	quit     chan struct{}
+}
+
+func NewKafkaConsumer() (*KafkaConsumer, error) {
+	config := &k.ConfigMap{
+		"bootstrap.servers": env.GetBroker(),
+		"group.id":          env.GetGroupId(),
+		"group.instance.id": env.GetGroupInstanceId(),
 		"auto.offset.reset": "earliest",
+		// "socket.timeout.ms":  10000,
+		// "session.timeout.ms": 60000,
 	}
-
-	// Create a new consumer
-	consumer, err := kafka.NewConsumer(config)
+	consumer, err := k.NewConsumer(config)
 	if err != nil {
-		log.Fatalf("Failed to create consumer: %v", err)
+		return nil, err
 	}
-	defer consumer.Close()
 
-	// Subscribe to the topic
-	err = consumer.SubscribeTopics([]string{env.Topic}, nil)
+	return &KafkaConsumer{
+		consumer: consumer,
+		Messages: make(chan Message),
+		quit:     make(chan struct{}),
+	}, nil
+}
+
+func (kc *KafkaConsumer) Start(pollTimeout time.Duration) {
+	err := kc.consumer.SubscribeTopics([]string{env.GetTopic()}, nil)
 	if err != nil {
-		log.Fatalf("Failed to subscribe to topic: %v", err)
+		log.Fatal(err)
 	}
-
-	fmt.Println("Kafka Consumer started... Press Ctrl+C to exit.")
-
-	// Capture system interrupts to gracefully shut down the consumer
-	sigchan := make(chan os.Signal, 1)
-	signal.Notify(sigchan, syscall.SIGINT, syscall.SIGTERM)
-
+	fmt.Printf("Subscribed to topic %s\n", env.GetTopic())
 	go func() {
-		sig := <-sigchan
-		fmt.Printf("Caught signal %v: terminating consumer...\n", sig)
-		os.Exit(1)
-	}()
-
-	for {
-		msg, err := consumer.ReadMessage(-1)
-		if err == nil {
-			fmt.Printf("Received message: %s\n", string(msg.Value))
-		} else {
-			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
+		for {
+			fmt.Println("Polling for messages...")
+			select {
+			case <-kc.quit:
+				fmt.Println("Stopping consumer...")
+				close(kc.Messages)
+				return
+			default:
+				msg, err := kc.consumer.ReadMessage(pollTimeout)
+				fmt.Println("Message received")
+				if err != nil {
+					if !err.(k.Error).IsTimeout() {
+						kc.Messages <- Message{KafkaMessage: msg, Error: err}
+					}
+				} else {
+					kc.Messages <- Message{KafkaMessage: msg, Error: nil}
+				}
+			}
 		}
-	}
+	}()
+}
+
+func (kc *KafkaConsumer) Stop() error {
+	close(kc.quit)
+	return kc.consumer.Close()
 }
