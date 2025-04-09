@@ -3,6 +3,7 @@ package kafka
 import (
 	"fmt"
 	"log"
+	"sync"
 	"time"
 
 	"github.com/ben105/crowdify/packages/env"
@@ -18,16 +19,18 @@ type KafkaConsumer struct {
 	consumer *k.Consumer
 	Messages chan Message
 	quit     chan struct{}
+	wg       sync.WaitGroup
+	once     sync.Once
 }
 
 func NewKafkaConsumer() (*KafkaConsumer, error) {
 	config := &k.ConfigMap{
-		"bootstrap.servers": env.GetBroker(),
-		"group.id":          env.GetGroupId(),
-		"group.instance.id": env.GetGroupInstanceId(),
-		"auto.offset.reset": "earliest",
-		// "socket.timeout.ms":  10000,
-		// "session.timeout.ms": 60000,
+		"bootstrap.servers":  env.GetBroker(),
+		"group.id":           env.GetGroupId(),
+		"enable.auto.commit": true,
+		"auto.offset.reset":  "earliest",
+		"socket.timeout.ms":  10000,
+		"session.timeout.ms": 60000,
 	}
 	consumer, err := k.NewConsumer(config)
 	if err != nil {
@@ -42,24 +45,31 @@ func NewKafkaConsumer() (*KafkaConsumer, error) {
 }
 
 func (kc *KafkaConsumer) Start(pollTimeout time.Duration) {
-	err := kc.consumer.SubscribeTopics([]string{env.GetTopic()}, nil)
+	topic := env.GetTopic()
+	if topic == "" {
+		log.Fatal("Kafka topic is not set")
+	}
+	err := kc.consumer.SubscribeTopics([]string{topic}, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Subscribed to topic %s\n", env.GetTopic())
+	fmt.Printf("Subscribed to topic %s on broker %s\n", topic, env.GetBroker())
+
+	kc.wg.Add(1)
 	go func() {
+		defer kc.wg.Done()
 		for {
 			fmt.Println("Polling for messages...")
 			select {
 			case <-kc.quit:
 				fmt.Println("Stopping consumer...")
-				close(kc.Messages)
+				kc.once.Do(func() { close(kc.Messages) })
 				return
 			default:
 				msg, err := kc.consumer.ReadMessage(pollTimeout)
 				fmt.Println("Message received")
 				if err != nil {
-					if !err.(k.Error).IsTimeout() {
+					if kErr, ok := err.(k.Error); ok && !kErr.IsTimeout() {
 						kc.Messages <- Message{KafkaMessage: msg, Error: err}
 					}
 				} else {
@@ -72,5 +82,7 @@ func (kc *KafkaConsumer) Start(pollTimeout time.Duration) {
 
 func (kc *KafkaConsumer) Stop() error {
 	close(kc.quit)
+	kc.wg.Wait()
+	kc.once.Do(func() { close(kc.Messages) })
 	return kc.consumer.Close()
 }
