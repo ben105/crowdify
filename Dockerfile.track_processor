@@ -5,7 +5,7 @@ WORKDIR /app
 COPY ./packages ./packages
 COPY ./services ./services
 RUN cd ./services/track_processor && go mod download && go mod tidy
-RUN cd ./services/track_processor && CGO_ENABLED=1 GOOS=linux GOARCH=arm64 go build -o main .
+RUN cd ./services/track_processor && CGO_ENABLED=1 GOOS=linux go build -o main .
 
 FROM ubuntu
 

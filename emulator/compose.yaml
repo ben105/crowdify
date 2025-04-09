@@ -44,6 +44,7 @@ services:
       - KAFKA_CREATE_TOPICS="track:1:1:1"
 
   track_processor:
+platform: linux/amd64
     build:
       context: ..
       dockerfile: Dockerfile.track_processor
@@ -66,6 +67,7 @@ services:
       - GROUP_INSTANCE_ID=local-track-processor-instance
 
   crowdify:
+    platform: linux/amd64
     build:
       context: ..
       dockerfile: Dockerfile.crowdify
