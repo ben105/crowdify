@@ -18,7 +18,7 @@ CREATE TABLE crowdify.unprocessed_tracks (
   album_release_date_precision text,
   
   -- Artists information (could be multiple)
-  artists frozen<list<map<text, text>>>,
+  artists frozen<list<map<text, text>>>
 );
 
 -- Create tracks table
@@ -30,7 +30,7 @@ CREATE TABLE crowdify.tracks (
   popularity int,
   explicit boolean,
   track_number int,
-  disc_number int
+  disc_number int,
 
   -- TODO: Add the fleshed out artists details
 
@@ -40,10 +40,10 @@ CREATE TABLE crowdify.tracks (
   album_type text,
   album_total_tracks int,
   album_release_date text,
-  album_release_date_precision text,
+  album_release_date_precision text
 );
+
+-- TODO: Create a secondary index on the artist as well.
 
 -- Create a secondary index on album_id for querying
 CREATE INDEX ON crowdify.tracks (album_id);
-
--- TODO: Create a secondary index on the artist as well.
