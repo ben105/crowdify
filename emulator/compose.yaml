@@ -53,7 +53,7 @@ services:
     environment:
       DYNAMIC_CONFIG_ENABLED: 'true'
   track_processor:
-platform: linux/amd64
+    platform: linux/amd64
     build:
       context: ..
       dockerfile: Dockerfile.track_processor
