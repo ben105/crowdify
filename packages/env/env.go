@@ -34,6 +34,10 @@ func GetBroker() string {
 	return GetEnv("BROKER", "localhost:9092")
 }
 
+func GetDeadLetterQueueTopic() string {
+	return GetEnv("DEAD_LETTER_QUEUE_TOPIC", "local-dead-letter-queue-topic")
+}
+
 func GetGroupId() string {
 	return GetEnv("GROUP_ID", "local-consumer-group")
 }

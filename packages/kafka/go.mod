@@ -1,4 +1,4 @@
-module github.com/ben105/crowdify/services/kafka
+module github.com/ben105/crowdify/packages/kafka
 
 go 1.23.7
 
@@ -7,6 +7,6 @@ require (
 	github.com/confluentinc/confluent-kafka-go/v2 v2.8.0
 )
 
-replace github.com/ben105/crowdify/packages/env => ../../packages/env
+replace github.com/ben105/crowdify/packages/env => ../env
 
 require github.com/joho/godotenv v1.5.1 // indirect

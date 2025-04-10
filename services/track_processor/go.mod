@@ -4,7 +4,7 @@ go 1.23.7
 
 require (
 	github.com/ben105/crowdify/packages/db v0.0.0-20250318211338-c8fa4d5b79ec
-	github.com/ben105/crowdify/services/kafka v0.0.0-20250318211338-c8fa4d5b79ec
+	github.com/ben105/crowdify/packages/kafka v0.0.0-00010101000000-000000000000
 )
 
 require (
@@ -23,4 +23,4 @@ replace github.com/ben105/crowdify/packages/db => ../../packages/db
 
 replace github.com/ben105/crowdify/packages/env => ../../packages/env
 
-replace github.com/ben105/crowdify/services/kafka => ../kafka
+replace github.com/ben105/crowdify/packages/kafka => ../../packages/kafka

@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/ben105/crowdify/services/kafka"
+	"github.com/ben105/crowdify/packages/kafka"
 )
 
 func main() {

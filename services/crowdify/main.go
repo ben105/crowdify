@@ -11,7 +11,7 @@ import (
 	"os"
 
 	"github.com/ben105/crowdify/packages/db"
-	"github.com/ben105/crowdify/services/kafka"
+	"github.com/ben105/crowdify/packages/kafka"
 )
 
 var conn *db.DbConnection

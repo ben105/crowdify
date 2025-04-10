@@ -3,9 +3,9 @@ go 1.23.7
 use (
 	./packages/db
 	./packages/env
+	./packages/kafka
 	./services/crowdify
 	./services/crowdify/integration
-	./services/kafka
 	./services/track_processor
 	./tools/cli
 	./tools/kafka
