@@ -4,6 +4,7 @@ use (
 	./packages/db
 	./packages/env
 	./packages/message_queue
+	./packages/rate_limiter
 	./services/crowdify
 	./services/crowdify/integration
 	./services/track_processor
