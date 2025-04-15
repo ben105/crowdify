@@ -1,0 +1,3 @@
+- Use LLM to create README (with source files as context)
+- Replace all fmt and log with slog and level
+- Finish writing tests

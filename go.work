@@ -3,7 +3,7 @@ go 1.23.7
 use (
 	./packages/db
 	./packages/env
-	./packages/kafka
+	./packages/message_queue
 	./services/crowdify
 	./services/crowdify/integration
 	./services/track_processor

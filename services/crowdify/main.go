@@ -11,7 +11,8 @@ import (
 	"os"
 
 	"github.com/ben105/crowdify/packages/db"
-	"github.com/ben105/crowdify/packages/kafka"
+	"github.com/ben105/crowdify/packages/env"
+	"github.com/ben105/crowdify/packages/message_queue"
 )
 
 var conn *db.DbConnection
@@ -64,7 +65,8 @@ func addUnprocessedTrack(unprocessedTrack db.UnprocessedTrack) {
 		log.Fatal(err)
 	}
 
-	kafka.Publish(trackJson)
+	p := message_queue.NewProducer(env.GetBroker(), env.GetTopic())
+	p.Produce(trackJson)
 }
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
