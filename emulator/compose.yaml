@@ -73,7 +73,28 @@ services:
       - BROKER=kafka:9092
       - TOPIC=track
       - GROUP_ID=local-track-processor
-
+  messenger:
+    platform: linux/amd64
+    build:
+      context: ..
+      dockerfile: Dockerfile.messenger
+    ports:
+      - "8082:8082"
+    hostname: messenger
+    networks:
+      - cassandra
+    tty: true
+    stdin_open: true
+    depends_on:
+      cassandra:
+        condition: service_healthy
+        restart: true
+      kafka:
+        condition: service_healthy
+        restart: true
+    environment:
+      - BROKER=kafka:9092
+      - TOPIC=track
   crowdify:
     platform: linux/amd64
     build:
@@ -90,12 +111,9 @@ services:
       cassandra:
         condition: service_healthy
         restart: true
-      kafka:
+      messenger:
         condition: service_healthy
         restart: true
-    environment:
-      - BROKER=kafka:9092
-      - TOPIC=track
 
 networks:
   cassandra:

@@ -7,6 +7,7 @@ use (
 	./packages/rate_limiter
 	./services/crowdify
 	./services/crowdify/integration
+	./services/messenger
 	./services/track_processor
 	./tools/cli
 	./tools/kafka

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -9,10 +10,11 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"strings"
+	"time"
 
 	"github.com/ben105/crowdify/packages/db"
 	"github.com/ben105/crowdify/packages/env"
-	"github.com/ben105/crowdify/packages/message_queue"
 )
 
 var conn *db.DbConnection
@@ -65,8 +67,38 @@ func addUnprocessedTrack(unprocessedTrack db.UnprocessedTrack) {
 		log.Fatal(err)
 	}
 
-	p := message_queue.NewProducer(env.GetBroker(), env.GetTopic())
-	p.Produce(trackJson)
+	serverURL := strings.Join([]string{env.GetMessengerUrl(), "message"}, "/")
+
+	bodyReader := bytes.NewReader(trackJson)
+	req, err := http.NewRequest(http.MethodPost, serverURL, bodyReader)
+	if err != nil {
+		panic(fmt.Sprintf("Error creating HTTP request: %v", err))
+	}
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{
+		Timeout: 30 * time.Second,
+	}
+	log.Printf("Sending POST request to %s", serverURL)
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(fmt.Sprintf("Error sending request: %v", err))
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusNoContent {
+		log.Println("Success! Server responded with 204 No Content as expected.")
+	} else {
+		log.Printf("Warning: Expected status code 204, but received %d", resp.StatusCode)
+
+		responseBodyBytes, readErr := io.ReadAll(resp.Body)
+		if readErr != nil {
+			log.Printf("Error reading response body: %v", readErr)
+		} else if len(responseBodyBytes) > 0 {
+			log.Printf("Response body content: %s", string(responseBodyBytes))
+		} else {
+			log.Println("Response body was empty.")
+		}
+	}
 }
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"

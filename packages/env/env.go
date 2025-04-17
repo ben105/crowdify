@@ -65,3 +65,7 @@ func GetCassandraUsername() string {
 func GetCassandraPassword() string {
 	return GetEnv("CASSANDRA_PASSWORD", "cassandra")
 }
+
+func GetMessengerUrl() string {
+	return GetEnv("MESSENGER_URL", "http://messenger:8082")
+}
