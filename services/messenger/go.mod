@@ -8,6 +8,7 @@ require (
 )
 
 replace github.com/ben105/crowdify/packages/env => ../../packages/env
+
 replace github.com/ben105/crowdify/packages/message_queue => ../../packages/message_queue
 
 require (

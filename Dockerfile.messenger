@@ -5,7 +5,7 @@ WORKDIR /app
 COPY ./packages ./packages
 COPY ./services ./services
 RUN cd ./services/messenger && go mod download && go mod tidy
-RUN cd ./services/messenger && CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -a -o main .
+RUN cd ./services/messenger && CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o main .
 
 FROM ubuntu
 

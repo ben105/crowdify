@@ -112,7 +112,7 @@ services:
         condition: service_healthy
         restart: true
       messenger:
-        condition: service_healthy
+        condition: service_started
         restart: true
 
 networks:

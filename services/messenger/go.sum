@@ -40,10 +40,6 @@ github.com/aws/aws-sdk-go-v2/service/sts v1.28.6 h1:cwIxeBttqPN3qkaAjcEcsh8NYr8n
 github.com/aws/aws-sdk-go-v2/service/sts v1.28.6/go.mod h1:FZf1/nKNEkHdGGJP/cI2MoIMquumuRK6ol3QQJNDxmw=
 github.com/aws/smithy-go v1.20.2 h1:tbp628ireGtzcHDDmLT/6ADHidqnwgF57XOXZe6tp4Q=
 github.com/aws/smithy-go v1.20.2/go.mod h1:krry+ya/rV9RDcV/Q16kpu6ypI4K2czasz0NC3qS14E=
-github.com/ben105/crowdify/packages/env v0.0.0-20250415195112-84b1c7874a2b h1:FOdPzOFr1VmhG1ZTqPGnW5Wrmy4j1LPp9Mqnj69Lxmo=
-github.com/ben105/crowdify/packages/env v0.0.0-20250415195112-84b1c7874a2b/go.mod h1:1TenE6tuWe8iZg1qBxJwt0MlGUiBtmJz0XH8YpszTyM=
-github.com/ben105/crowdify/packages/message_queue v0.0.0-20250415195112-84b1c7874a2b h1:VHyM1nVLt7VFsBJh6dEqki/2ZVPwADEkTZd3mQp3xc0=
-github.com/ben105/crowdify/packages/message_queue v0.0.0-20250415195112-84b1c7874a2b/go.mod h1:Qvd9lJInRiJuDIV3blF+hHapU8xVJwzgDFkfcMu9HVE=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
 github.com/buger/goterm v1.0.4 h1:Z9YvGmOih81P0FbVtEYTFF6YsSgxSUKEhf/f9bTMXbY=
