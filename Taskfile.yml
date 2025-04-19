@@ -1,0 +1,25 @@
+version: '3'
+
+dotenv: ['.env']
+
+tasks:
+  up:
+    dir: ./emulator
+    preconditions:
+      - test -f compose.yaml
+    cmds:
+      - docker compose up --profile api -d
+
+  up-no-api:
+    dir: ./emulator
+    preconditions:
+      - test -f compose.yaml
+    cmds:
+      - docker compose up -d
+
+  down:
+    dir: ./emulator
+    preconditions:
+      - test -f compose.yaml
+    cmds:
+      - docker compose down

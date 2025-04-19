@@ -96,6 +96,7 @@ services:
       - BROKER=kafka:9092
       - TOPIC=track
   crowdify:
+    profiles: [api]
     platform: linux/amd64
     build:
       context: ..
