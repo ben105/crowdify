@@ -1,3 +1,5 @@
+package rate_limiter
+
 import (
     "context"
     "fmt"

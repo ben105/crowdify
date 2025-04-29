@@ -69,3 +69,15 @@ func GetCassandraPassword() string {
 func GetMessengerUrl() string {
 	return GetEnv("MESSENGER_URL", "http://messenger:8082")
 }
+
+func GetSpotifyClientId() string {
+	return GetEnv("SPOTIFY_CLIENT_ID", "")
+}
+
+func GetSpotifyClientSecret() string {
+	return GetEnv("SPOTIFY_CLIENT_SECRET", "")
+}
+
+func GetSpotifyRedirectUri() string {
+	return GetEnv("SPOTIFY_REDIRECT_URI", "")
+}

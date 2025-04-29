@@ -1,12 +1,12 @@
-import { type Component } from "solid-js";
-import AppRouter from "./AppRouter";
+import './App.css'
+import DragAndDropColumns from './Mixer'
 
-const App: Component = () => {
+function App() {
   return (
     <div>
-      <AppRouter />
+      <DragAndDropColumns />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

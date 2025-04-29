@@ -9,6 +9,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -26,6 +27,8 @@ func main() {
 
 	// Not a real endpoint. Just for testing.
 	mux.HandleFunc("/unprocessTrack", handleUnprocessedTrack)
+	mux.HandleFunc("/login", handleLogin)
+	mux.HandleFunc("/callback", handleCallback)
 
 	err := http.ListenAndServe(":8080", mux)
 	if errors.Is(err, http.ErrServerClosed) {
@@ -34,6 +37,42 @@ func main() {
 		fmt.Printf("Error starting server: %s\n", err)
 		os.Exit(1)
 	}
+}
+
+func handleLogin(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("got /login request\n")
+
+	clientId := env.GetSpotifyClientId()
+	clientSecret := env.GetSpotifyClientSecret()
+	redirectUri := env.GetSpotifyRedirectUri()
+	if clientId == "" || clientSecret == "" || redirectUri == "" {
+		http.Error(w, "Spotify client ID and secret and redirect URI are required", http.StatusBadRequest)
+		return
+	}
+
+	params := url.Values{}
+	params.Add("response_type", "code")
+	params.Add("client_id", clientId)
+	params.Add("scope", scope)
+	params.Add("redirect_uri", redirectUri)
+	params.Add("state", randStringBytes(16))
+
+	authUri := spotifyAuthUrl + "?" + params.Encode()
+	http.Redirect(w, r, authUri, http.StatusFound)
+}
+
+type TokenResponse struct {
+	AccessToken  string `json:"access_token"`
+	TokenType    string `json:"token_type"`
+	Scope        string `json:"scope"`
+	ExpiresIn    int    `json:"expires_in"`
+	RefreshToken string `json:"refresh_token"`
+}
+
+func handleCallback(w http.ResponseWriter, r *http.Request) {
+	receivedState := r.URL.Query().Get("state")
+	receivedCode := r.URL.Query().Get("code")
+
 }
 
 func handleUnprocessedTrack(w http.ResponseWriter, r *http.Request) {
